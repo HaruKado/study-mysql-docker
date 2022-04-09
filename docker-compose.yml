@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: test
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      TZ: "Asia/Tokyo"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --general_log=1
+    volumes:
+      - ./mysql/volume:/docker-entrypoint-initdb.d/
+
+  php-my-admin:
+    image: phpmyadmin
+    links:
+      - mysql
+    ports:
+      - "89:80"
+    environment:
+      MYSQ_USERNAME: test
+      MYSQL_PASSWORD: 1
+      PMA_HOST: mysql
+      PMA_PORT: 3306
